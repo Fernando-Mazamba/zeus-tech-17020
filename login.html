@@ -55,7 +55,11 @@ button:hover{background:#0d4280}
     var u = document.getElementById('utilizador').value.trim();
     var c = document.getElementById('codigo').value;
     if (u.toLowerCase() === SGI_UTILIZADOR.toLowerCase() && c === SGI_CODIGO) {
-      try { sessionStorage.setItem('zt_sgi_sessao', 'ok'); } catch (err) {}
+      var guardou = false;
+      try { localStorage.setItem('zt_sgi_sessao', 'ok'); guardou = true; } catch (err) {}
+      if (!guardou) {
+        try { sessionStorage.setItem('zt_sgi_sessao', 'ok'); } catch (err) {}
+      }
       location.replace('index.html');
       return;
     }

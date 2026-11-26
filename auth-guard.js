@@ -12,8 +12,10 @@ var SGI_CODIGO     = 'Zt17020';
 /* -------------------------------------------------------------------------
    AVISO IMPORTANTE — LEIA ANTES DE CONFIAR NISTO
 
-   O código é pedido UMA VEZ, à entrada do portal. Enquanto o navegador
-   estiver aberto não volta a pedir.
+   O código é pedido UMA VEZ por computador. Fica guardado no navegador e
+   não volta a pedir, mesmo depois de o fechar e abrir outra vez. Só torna a
+   pedir se a pessoa limpar os dados do navegador, usar uma janela anónima
+   ou abrir o portal noutro computador.
 
    Este controlo corre no navegador de quem visita. Serve para que o portal
    não fique à vista de quem apanhe o endereço por acaso, mas NÃO é uma
@@ -49,10 +51,15 @@ var SGI_CODIGO     = 'Zt17020';
   }
 
   function autenticado() {
+    // localStorage sobrevive a fechar o navegador; o sessionStorage fica como
+    // alternativa para quando o localStorage está bloqueado (janela anónima).
     try {
-      return sessionStorage.getItem(CHAVE) === 'ok';
+      if (window.localStorage.getItem(CHAVE) === 'ok') return true;
+    } catch (e) { /* bloqueado: tenta o outro */ }
+    try {
+      return window.sessionStorage.getItem(CHAVE) === 'ok';
     } catch (e) {
-      return false;   // sessionStorage bloqueado: trata como não autenticado
+      return false;
     }
   }
 
