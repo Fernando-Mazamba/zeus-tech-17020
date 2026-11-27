@@ -179,6 +179,9 @@ footer{border-top:1px solid var(--risca);margin-top:34px;padding-top:17px;
 #ac_ficheiro{margin-top:12px;background:#0d1b2a;color:#cfe0f3;border-radius:9px;
  padding:14px 16px;font-family:Consolas,ui-monospace,monospace;font-size:.78rem;
  line-height:1.5;max-height:330px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.utils{border:1px solid var(--risca);margin-top:4px}
+.utils td{padding:9px 13px}
+.utils tr:first-child td{border-top:none}
 </style>
 <script src="auth-guard.js" data-raiz=""></script>
 </head>
@@ -195,7 +198,7 @@ footer{border-top:1px solid var(--risca);margin-top:34px;padding-top:17px;
 
    <button class="nav" data-vista="sgi">Documentos do SGI</button>
    <button class="nav" data-vista="guardar">Guardar os registos</button>
-   <button class="nav" data-vista="acesso">Dados de acesso</button>
+   <button class="nav" data-vista="acesso">Utilizadores</button>
   </nav>
   <div class="rodalado">ISO/IEC 17020:2012<br>Organismo de Inspecção</div>
  </aside>
@@ -247,34 +250,56 @@ footer{border-top:1px solid var(--risca);margin-top:34px;padding-top:17px;
   </div>
 
   <div id="acesso" class="vista">
-   <div class="cab"><h2>Alterar os dados de acesso</h2></div>
-   <p class="nota top">O utilizador e o código vivem no ficheiro <code>auth-guard.js</code> do site. Este ecrã escreve o ficheiro novo por si; para a alteração valer para toda a gente, esse ficheiro tem de substituir o actual no repositório.</p>
-   <article class="cl">
+   <div class="cab"><h2>Utilizadores do portal</h2></div>
+   <p class="nota top">Quem entra no portal está nesta lista. Para criar ou apagar utilizadores, identifique-se primeiro com um utilizador que já exista.</p>
+
+   <article class="cl" id="ac_porta">
     <div class="campos">
-     <label>Código actual<input type="password" id="ac_actual" autocomplete="off"></label>
-     <label>Novo utilizador<input type="text" id="ac_util" autocomplete="off" spellcheck="false"></label>
-     <label>Novo código<input type="text" id="ac_cod" autocomplete="off" spellcheck="false"></label>
-     <label>Repetir o novo código<input type="text" id="ac_conf" autocomplete="off" spellcheck="false"></label>
+     <label>O seu utilizador<input type="text" id="ac_quem" autocomplete="off" spellcheck="false"></label>
+     <label>O seu código<input type="password" id="ac_quem_cod" autocomplete="off"></label>
     </div>
-    <div class="bts esq"><button class="bt bt-doc" id="ac_gerar">Gerar o ficheiro</button></div>
-    <div class="serro" id="ac_msg"></div>
-    <div id="ac_saida" hidden>
-     <div class="bts esq">
-      <button class="bt bt-xls" id="ac_copiar">Copiar</button>
-      <button class="bt bt-doc" id="ac_baixar">Descarregar auth-guard.js</button>
-      <a class="bt bt-pdf" href="https://github.com/Fernando-Mazamba/zeus-tech-17020/edit/main/auth-guard.js" target="_blank"
-         rel="noopener">Abrir o ficheiro no GitHub</a>
-     </div>
-     <pre id="ac_ficheiro"></pre>
-    </div>
+    <div class="bts esq"><button class="bt bt-doc" id="ac_entrar">Identificar-me</button></div>
+    <div class="serro" id="ac_msg_porta"></div>
    </article>
-   <div class="aviso"><b>O que isto é, e o que não é.</b> Este portão esconde o portal de quem apanhe o endereço por acaso. Não protege os ficheiros: o código está no JavaScript que o navegador recebe, e cada PDF abre pelo endereço directo sem passar pela entrada. Para controlo de acesso a sério — com utilizadores que se criam e apagam, sem palavra-passe em ficheiro — o caminho é o Cloudflare Access à frente do domínio, gratuito até 50 utilizadores.</div>
+
+   <div id="ac_gestao" hidden>
+    <article class="cl">
+     <header><h3>Utilizadores</h3></header>
+     <p class="nota">Os códigos não se podem ver: fica guardado um resumo que não se reverte. Quem perder o código, cria-se outra vez com um código novo.</p>
+     <table class="utils"><tbody id="ac_lista"></tbody></table>
+    </article>
+
+    <article class="cl">
+     <header><h3>Criar utilizador</h3></header>
+     <div class="campos">
+      <label>Nome do utilizador<input type="text" id="ac_util" autocomplete="off" spellcheck="false"></label>
+      <label>Código<input type="text" id="ac_cod" autocomplete="off" spellcheck="false"></label>
+      <label>Repetir o código<input type="text" id="ac_conf" autocomplete="off" spellcheck="false"></label>
+     </div>
+     <div class="bts esq"><button class="bt bt-doc" id="ac_criar">Acrescentar à lista</button></div>
+     <div class="serro" id="ac_msg"></div>
+    </article>
+
+    <article class="cl">
+     <div class="bts esq">
+      <button class="bt bt-xls" id="ac_gerar">Gerar o ficheiro</button>
+      <button class="bt bt-doc" id="ac_copiar" hidden>Copiar</button>
+      <button class="bt bt-doc" id="ac_baixar" hidden>Descarregar auth-guard.js</button>
+      <a class="bt bt-pdf" id="ac_editar" href="https://github.com/Fernando-Mazamba/zeus-tech-17020/edit/main/auth-guard.js"
+         target="_blank" rel="noopener" hidden>Abrir o ficheiro no GitHub</a>
+     </div>
+     <div class="serro" id="ac_msg_ger"></div>
+     <pre id="ac_ficheiro" hidden></pre>
+    </article>
+   </div>
+
+   <div class="aviso"><b>O que isto é, e o que não é.</b> Esta entrada esconde o portal de quem apanhe o endereço por acaso. Não protege os ficheiros: cada PDF abre pelo endereço directo sem passar por aqui. Para controlo de acesso a sério — utilizadores que entram em vigor sozinhos, sem substituir ficheiro nenhum — o caminho é o Cloudflare Access à frente do domínio, gratuito até 50 utilizadores.</div>
   </div>
 
   <footer>68 documentos do Organismo de Inspecção, cada um em .docx e .pdf, mais o livro de registos. Índice construído a partir da Lista Mestra e da matriz de cláusulas do Manual.<br>Documento controlado — as cópias impressas são consideradas não controladas.</footer>
  </main>
 </div>
-<script>var ZT_ACESSO = {"guarda": "/* =========================================================================\n   ZEUS TECH OIL & GAS — Sistema de Gestão do Organismo de Inspecção\n   Controlo de acesso ao portal documental\n\n   >>> PARA MUDAR O UTILIZADOR E O CÓDIGO, EDITE AS DUAS LINHAS ABAIXO. <<<\n   Depois de editar, guarde o ficheiro e faça o envio para o repositório.\n   ========================================================================= */\n\nvar SGI_UTILIZADOR = 'zeustech';\nvar SGI_CODIGO     = 'Zt17020';\n\n/* -------------------------------------------------------------------------\n   AVISO IMPORTANTE — LEIA ANTES DE CONFIAR NISTO\n\n   O código é pedido UMA VEZ por computador. Fica guardado no navegador e\n   não volta a pedir, mesmo depois de o fechar e abrir outra vez. Só torna a\n   pedir se a pessoa limpar os dados do navegador, usar uma janela anónima\n   ou abrir o portal noutro computador.\n\n   Este controlo corre no navegador de quem visita. Serve para que o portal\n   não fique à vista de quem apanhe o endereço por acaso, mas NÃO é uma\n   proteção verdadeira:\n\n     - o utilizador e o código estão neste ficheiro, que é servido ao\n       navegador e pode ser lido por qualquer visitante;\n     - os documentos continuam acessíveis pelo endereço direto. Quem tiver\n       a ligação de um PDF abre-o sem passar por aqui.\n\n   Para proteção a sério num site estático há três caminhos:\n     1. Cloudflare Access à frente do domínio (gratuito até 50 utilizadores):\n        a autenticação acontece antes de o ficheiro ser servido;\n     2. alojamento com palavra-passe ao nível do servidor (Netlify, ou\n        Apache com .htaccess num alojamento tipo cPanel);\n     3. não publicar os documentos sensíveis: deixá-los só no pacote que\n        se entrega à empresa.\n   ------------------------------------------------------------------------- */\n\n(function () {\n  'use strict';\n\n  var CHAVE = 'zt_sgi_sessao';\n\n  function raiz() {\n    var s = document.currentScript;\n    if (s && s.getAttribute('data-raiz') !== null) return s.getAttribute('data-raiz');\n    if (s && s.src) {\n      var m = s.src.match(/^(.*\\/)auth-guard\\.js(?:\\?.*)?$/);\n      if (m) return m[1];\n    }\n    return '';\n  }\n\n  function autenticado() {\n    // localStorage sobrevive a fechar o navegador; o sessionStorage fica como\n    // alternativa para quando o localStorage está bloqueado (janela anónima).\n    try {\n      if (window.localStorage.getItem(CHAVE) === 'ok') return true;\n    } catch (e) { /* bloqueado: tenta o outro */ }\n    try {\n      return window.sessionStorage.getItem(CHAVE) === 'ok';\n    } catch (e) {\n      return false;\n    }\n  }\n\n  // A página de entrada não se protege a si própria.\n  if (/(^|\\/)login\\.html($|[?#])/.test(location.pathname + location.search)) return;\n\n  if (autenticado()) return;\n\n  // Esconder a página antes de qualquer coisa aparecer, e reencaminhar.\n  try {\n    document.documentElement.style.visibility = 'hidden';\n  } catch (e) { /* ignorar */ }\n\n  location.replace(raiz() + 'login.html');\n})();\n", "txt": {"h": "Alterar os dados de acesso", "intro": "O utilizador e o código vivem no ficheiro <code>auth-guard.js</code> do site. Este ecrã escreve o ficheiro novo por si; para a alteração valer para toda a gente, esse ficheiro tem de substituir o actual no repositório.", "l_actual": "Código actual", "l_util": "Novo utilizador", "l_cod": "Novo código", "l_conf": "Repetir o novo código", "gerar": "Gerar o ficheiro", "copiar": "Copiar", "descarregar": "Descarregar auth-guard.js", "editar": "Abrir o ficheiro no GitHub", "e_actual": "O código actual não está correcto.", "e_vazio": "Preencha o utilizador e o código novos.", "e_conf": "Os dois códigos não coincidem.", "e_curto": "O código deve ter pelo menos 6 caracteres.", "ok": "Ficheiro gerado. Substitua o <code>auth-guard.js</code> no repositório pelo conteúdo abaixo — o site actualiza-se cerca de um minuto depois. Até lá, o código actual continua a valer.", "copiado": "Copiado.", "aviso": "<b>O que isto é, e o que não é.</b> Este portão esconde o portal de quem apanhe o endereço por acaso. Não protege os ficheiros: o código está no JavaScript que o navegador recebe, e cada PDF abre pelo endereço directo sem passar pela entrada. Para controlo de acesso a sério — com utilizadores que se criam e apagam, sem palavra-passe em ficheiro — o caminho é o Cloudflare Access à frente do domínio, gratuito até 50 utilizadores."}}; var ZT_PALAVRAS = {"cl": "cláusulas", "doc": "documentos"};</script>
+<script>var ZT_ACESSO = {"guarda": "/* =========================================================================\n   ZEUS TECH OIL & GAS — Sistema de Gestão do Organismo de Inspecção\n   Controlo de acesso ao portal documental\n\n   Os utilizadores criam-se e apagam-se no próprio portal, na vista\n   \"Utilizadores\" da barra lateral. Esse ecrã escreve este ficheiro já\n   pronto; basta substituí-lo no repositório para a alteração valer para\n   toda a gente.\n\n   Os códigos NÃO estão aqui em texto. O que está guardado é o resumo\n   (SHA-256) de sal|utilizador|código, que não se pode reverter. Quem perder\n   o código não o recupera: cria-se o utilizador outra vez com um código novo.\n   ========================================================================= */\n\nvar SGI_SAL = 'ZEUS-TECH-17020';\n\n/* --- utilizadores --- */\nvar SGI_UTILIZADORES = [\n  { u: 'zeustech', h: 'f0eca4cf0a16e5880037d776122b01939e807a1b97670428782c40f3992ad032' }\n];\n/* --- fim dos utilizadores --- */\n\n/* -------------------------------------------------------------------------\n   AVISO IMPORTANTE — LEIA ANTES DE CONFIAR NISTO\n\n   O código é pedido UMA VEZ por computador. Fica guardado no navegador e não\n   volta a pedir, mesmo depois de o fechar e abrir outra vez. Só torna a pedir\n   se limparem os dados do navegador, usarem uma janela anónima ou abrirem o\n   portal noutro computador.\n\n   Este controlo corre no navegador de quem visita. Guardar resumos em vez de\n   códigos impede que alguém leia as palavras-passe no código-fonte, mas isto\n   continua a NÃO ser uma proteção verdadeira:\n\n     - os documentos continuam acessíveis pelo endereço directo. Quem tiver a\n       ligação de um PDF abre-o sem passar por aqui;\n     - quem perceba de navegadores contorna a verificação, que corre do lado\n       de quem visita.\n\n   Para proteção a sério num site estático há três caminhos:\n     1. Cloudflare Access à frente do domínio (gratuito até 50 utilizadores):\n        a autenticação acontece antes de o ficheiro ser servido;\n     2. alojamento com palavra-passe ao nível do servidor (Netlify, ou Apache\n        com .htaccess num alojamento tipo cPanel);\n     3. não publicar os documentos sensíveis: deixá-los só no pacote que se\n        entrega à empresa.\n   ------------------------------------------------------------------------- */\n\nvar SGI_CHAVE = 'zt_sgi_sessao';\n\n/* Resumo de um par utilizador/código. Devolve uma promessa com o hexadecimal.\n   Usa a Web Crypto, que existe em https e em localhost. */\nfunction sgiResumo(utilizador, codigo) {\n  var texto = SGI_SAL + '|' + String(utilizador).trim().toLowerCase() + '|' + String(codigo);\n  if (!(window.crypto && window.crypto.subtle)) {\n    return Promise.reject(new Error('sem-crypto'));\n  }\n  return window.crypto.subtle\n    .digest('SHA-256', new TextEncoder().encode(texto))\n    .then(function (buf) {\n      return Array.prototype.map\n        .call(new Uint8Array(buf), function (b) { return ('0' + b.toString(16)).slice(-2); })\n        .join('');\n    });\n}\n\n/* Confere um par contra a lista. Promessa com o utilizador encontrado, ou null. */\nfunction sgiConfere(utilizador, codigo) {\n  var nome = String(utilizador).trim().toLowerCase();\n  return sgiResumo(nome, codigo).then(function (h) {\n    for (var i = 0; i < SGI_UTILIZADORES.length; i++) {\n      if (SGI_UTILIZADORES[i].u.toLowerCase() === nome && SGI_UTILIZADORES[i].h === h) {\n        return SGI_UTILIZADORES[i].u;\n      }\n    }\n    return null;\n  });\n}\n\n(function () {\n  'use strict';\n\n  function raiz() {\n    var s = document.currentScript;\n    if (s && s.getAttribute('data-raiz') !== null) return s.getAttribute('data-raiz');\n    if (s && s.src) {\n      var m = s.src.match(/^(.*\\/)auth-guard\\.js(?:\\?.*)?$/);\n      if (m) return m[1];\n    }\n    return '';\n  }\n\n  function autenticado() {\n    // localStorage sobrevive a fechar o navegador; o sessionStorage fica como\n    // alternativa para quando o localStorage está bloqueado (janela anónima).\n    try {\n      if (window.localStorage.getItem(SGI_CHAVE)) return true;\n    } catch (e) { /* bloqueado: tenta o outro */ }\n    try {\n      return !!window.sessionStorage.getItem(SGI_CHAVE);\n    } catch (e) {\n      return false;\n    }\n  }\n\n  // A página de entrada não se protege a si própria.\n  if (/(^|\\/)login\\.html($|[?#])/.test(location.pathname + location.search)) return;\n\n  if (autenticado()) return;\n\n  try {\n    document.documentElement.style.visibility = 'hidden';\n  } catch (e) { /* ignorar */ }\n\n  location.replace(raiz() + 'login.html');\n})();\n", "txt": {"h": "Utilizadores do portal", "intro": "Quem entra no portal está nesta lista. Para criar ou apagar utilizadores, identifique-se primeiro com um utilizador que já exista.", "l_quem": "O seu utilizador", "l_quem_cod": "O seu código", "entrar": "Identificar-me", "lista_h": "Utilizadores", "novo_h": "Criar utilizador", "l_util": "Nome do utilizador", "l_cod": "Código", "l_conf": "Repetir o código", "criar": "Acrescentar à lista", "apagar": "Apagar", "gerar": "Gerar o ficheiro", "copiar": "Copiar", "descarregar": "Descarregar auth-guard.js", "editar": "Abrir o ficheiro no GitHub", "e_quem": "Utilizador ou código incorrecto.", "e_vazio": "Preencha o nome e o código.", "e_conf": "Os dois códigos não coincidem.", "e_curto": "O código deve ter pelo menos 6 caracteres.", "e_existe": "Já existe um utilizador com esse nome.", "e_ultimo": "Tem de ficar pelo menos um utilizador.", "e_chars": "Use apenas letras, algarismos e . _ - @ (3 a 40 caracteres).", "e_crypto": "Este navegador não permite calcular o resumo aqui. Abra o site em https.", "ok_criado": "Utilizador acrescentado à lista. Gere o ficheiro para a alteração valer.", "ok_apagado": "Utilizador retirado da lista. Gere o ficheiro para a alteração valer.", "ok": "Ficheiro gerado. Substitua o <code>auth-guard.js</code> no repositório pelo conteúdo abaixo — o site actualiza-se cerca de um minuto depois. Até lá vale a lista antiga.", "copiado": "Copiado.", "sem_cod": "Os códigos não se podem ver: fica guardado um resumo que não se reverte. Quem perder o código, cria-se outra vez com um código novo.", "aviso": "<b>O que isto é, e o que não é.</b> Esta entrada esconde o portal de quem apanhe o endereço por acaso. Não protege os ficheiros: cada PDF abre pelo endereço directo sem passar por aqui. Para controlo de acesso a sério — utilizadores que entram em vigor sozinhos, sem substituir ficheiro nenhum — o caminho é o Cloudflare Access à frente do domínio, gratuito até 50 utilizadores."}}; var ZT_PALAVRAS = {"cl": "cláusulas", "doc": "documentos"};</script>
 <script>(function () {
   'use strict';
 
@@ -343,53 +368,100 @@ footer{border-top:1px solid var(--risca);margin-top:34px;padding-top:17px;
                document.getElementById('v3'), '#sgi tr[data-busca]', '#sgi .sec',
                palavras.doc || 'documentos');
 
-  // ------------------------------------------------- dados de acesso
-  // Escreve o auth-guard.js novo. Não altera nada sozinho: o ficheiro tem de
-  // substituir o actual no repositório para a mudança valer para toda a gente.
+  // ------------------------------------------------- utilizadores do portal
+  // A lista vive no auth-guard.js. Este ecrã edita uma cópia e escreve o
+  // ficheiro novo; nada muda para os outros até esse ficheiro ser substituído.
   var cfg = window.ZT_ACESSO;
-  var botaoGerar = document.getElementById('ac_gerar');
-  if (cfg && botaoGerar) {
+  var btEntrar = document.getElementById('ac_entrar');
+  if (cfg && btEntrar && typeof SGI_UTILIZADORES !== 'undefined') {
     var txt = cfg.txt;
-    var msg = document.getElementById('ac_msg');
-    var saida = document.getElementById('ac_saida');
-    var pre = document.getElementById('ac_ficheiro');
     var SEGURO = /^[A-Za-z0-9._@-]{3,40}$/;
+    var lista = SGI_UTILIZADORES.map(function (x) { return {u: x.u, h: x.h}; });
     var gerado = '';
+    var msgPorta = document.getElementById('ac_msg_porta');
+    var msg = document.getElementById('ac_msg');
+    var msgGer = document.getElementById('ac_msg_ger');
+    var gestao = document.getElementById('ac_gestao');
+    var tabela = document.getElementById('ac_lista');
+    var pre = document.getElementById('ac_ficheiro');
 
-    function erro(t) {
-      msg.innerHTML = t;
-      msg.className = 'serro mau';
-      saida.hidden = true;
+    function diz(onde, texto, bom) {
+      onde.innerHTML = texto;
+      onde.className = 'serro ' + (bom ? 'bom' : 'mau');
     }
 
-    botaoGerar.addEventListener('click', function () {
-      var actual = document.getElementById('ac_actual').value;
-      var util = document.getElementById('ac_util').value.trim();
-      var cod = document.getElementById('ac_cod').value.trim();
-      var conf = document.getElementById('ac_conf').value.trim();
+    function desenhar() {
+      tabela.innerHTML = '';
+      lista.forEach(function (x, i) {
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td');
+        td1.className = 'cod'; td1.textContent = x.u;
+        var td2 = document.createElement('td');
+        var b = document.createElement('button');
+        b.className = 'bt bt-pdf bt-s'; b.textContent = txt.apagar;
+        b.addEventListener('click', function () {
+          if (lista.length <= 1) { return diz(msg, txt.e_ultimo, false); }
+          lista.splice(i, 1);
+          desenhar();
+          diz(msg, txt.ok_apagado, true);
+        });
+        td2.appendChild(b); td2.style.textAlign = 'right';
+        tr.appendChild(td1); tr.appendChild(td2);
+        tabela.appendChild(tr);
+      });
+    }
 
-      if (typeof SGI_CODIGO === 'undefined' || actual !== SGI_CODIGO) {
-        return erro(txt.e_actual);
-      }
-      if (!util || !cod) { return erro(txt.e_vazio); }
-      if (cod.length < 6) { return erro(txt.e_curto); }
-      if (cod !== conf) { return erro(txt.e_conf); }
-      if (!SEGURO.test(util) || !SEGURO.test(cod)) {
-        return erro('Use apenas letras, algarismos e . _ - @ (3 a 40 caracteres). / ' +
-                    'Use only letters, digits and . _ - @ (3 to 40 characters).');
-      }
+    btEntrar.addEventListener('click', function () {
+      var q = document.getElementById('ac_quem').value.trim();
+      var c = document.getElementById('ac_quem_cod').value;
+      sgiConfere(q, c).then(function (nome) {
+        if (!nome) { return diz(msgPorta, txt.e_quem, false); }
+        msgPorta.innerHTML = '';
+        document.getElementById('ac_porta').hidden = true;
+        gestao.hidden = false;
+        desenhar();
+      }, function () { diz(msgPorta, txt.e_crypto, false); });
+    });
 
-      gerado = cfg.guarda
-        .replace(/(var\s+SGI_UTILIZADOR\s*=\s*)'[^']*'/, "$1'" + util + "'")
-        .replace(/(var\s+SGI_CODIGO\s*=\s*)'[^']*'/, "$1'" + cod + "'");
+    document.getElementById('ac_criar').addEventListener('click', function () {
+      var u = document.getElementById('ac_util').value.trim();
+      var c = document.getElementById('ac_cod').value.trim();
+      var c2 = document.getElementById('ac_conf').value.trim();
+      if (!u || !c) { return diz(msg, txt.e_vazio, false); }
+      if (!SEGURO.test(u) || !SEGURO.test(c)) { return diz(msg, txt.e_chars, false); }
+      if (c.length < 6) { return diz(msg, txt.e_curto, false); }
+      if (c !== c2) { return diz(msg, txt.e_conf, false); }
+      var existe = lista.some(function (x) { return x.u.toLowerCase() === u.toLowerCase(); });
+      if (existe) { return diz(msg, txt.e_existe, false); }
+      sgiResumo(u, c).then(function (h) {
+        lista.push({u: u, h: h});
+        desenhar();
+        ['ac_util', 'ac_cod', 'ac_conf'].forEach(function (id) {
+          document.getElementById(id).value = '';
+        });
+        diz(msg, txt.ok_criado, true);
+      }, function () { diz(msg, txt.e_crypto, false); });
+    });
+
+    document.getElementById('ac_gerar').addEventListener('click', function () {
+      var linhas = lista.map(function (x) {
+        return "  { u: '" + x.u + "', h: '" + x.h + "' }";
+      }).join(',\n');
+      var bloco = '/* --- utilizadores --- */\nvar SGI_UTILIZADORES = [\n' +
+                  linhas + '\n];\n/* --- fim dos utilizadores --- */';
+      gerado = cfg.guarda.replace(
+        /\/\* --- utilizadores --- \*\/[\s\S]*?\/\* --- fim dos utilizadores --- \*\//,
+        function () { return bloco; });
       pre.textContent = gerado;
-      saida.hidden = false;
-      msg.innerHTML = txt.ok;
-      msg.className = 'serro bom';
+      pre.hidden = false;
+      ['ac_copiar', 'ac_baixar', 'ac_editar'].forEach(function (id) {
+        document.getElementById(id).hidden = false;
+      });
+      diz(msgGer, txt.ok, true);
     });
 
     document.getElementById('ac_copiar').addEventListener('click', function () {
-      var fim = function () { msg.innerHTML = txt.copiado; msg.className = 'serro bom'; };
+      var fim = function () { diz(msgGer, txt.copiado, true); };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(gerado).then(fim, function () {});
       } else {
